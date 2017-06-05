@@ -8,14 +8,26 @@ package mysql;
  * * Gabriel Belarmino (email: gabrielbelarmino1995@gmail.com)
  * 2017
  */
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author gabriel e luiz
  */
 public class Main {
+    public static Connection conn = null; 
+    public static final String serverName = "127.0.0.1";;
+    public static final String mydatabase = "twitter";  
+    public static final String url = "jdbc:mysql://" + serverName + "/" + mydatabase;;
+    public static final String username = "root";;
+    public static final String password = "";
     public static void main(String[] args) {
+        try{
+        Class.forName("com.mysql.jdbc.Driver");
+        conn = DriverManager.getConnection(url, username, password);
         int op;
         //buidCollectionUser();
         //buildCollectionTwitter();
@@ -232,8 +244,13 @@ public class Main {
                     DBOperations.generateFollower(a,b);
                     break;
             }
+            conn.close();
         }while (op != 0);
-        
+                } catch (ClassNotFoundException e) {
+            Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
+        }catch (SQLException e){
+            Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
+        }
     }
     
  

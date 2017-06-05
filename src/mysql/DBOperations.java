@@ -20,12 +20,8 @@ import javax.swing.JOptionPane;
  */
 public class DBOperations {
     
-    private static Connection conn = null; 
-    private static final String serverName = "127.0.0.1";;
-    private static final String mydatabase = "twitter";  
-    private static final String url = "jdbc:mysql://" + serverName + "/" + mydatabase;;
-    private static final String username = "root";;
-    private static final String password = "";
+    
+    
     
     /**
      * insere um user à classe de usuários
@@ -34,9 +30,8 @@ public class DBOperations {
      */
     public static boolean insertUser(User user){
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(url, username, password);
-            Statement st = conn.createStatement();
+            
+            Statement st = Main.conn.createStatement();
             st.executeUpdate("INSERT INTO `twitter`.`User`(idUser,email,name,country,lang,cellphone)"
             + "VALUES('"+user.user
                         +"','"
@@ -51,9 +46,6 @@ public class DBOperations {
                         +user.telephone+ 
                         "')");
         
-        } catch (ClassNotFoundException e) {
-            Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
-            return false;
         }catch (SQLException e){
             Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
             JOptionPane.showMessageDialog(null,"Erro Na Inserção do Supermercado");
@@ -89,9 +81,7 @@ public class DBOperations {
      */
     public static boolean generateFollower(User a,User b){
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(url, username, password);
-            Statement st = conn.createStatement();
+            Statement st = Main.conn.createStatement();
             System.out.println(b.user);
             st.executeUpdate("INSERT INTO Followers (User_idUser,Folower)"
                     + "VALUES('"+a.user
@@ -103,12 +93,8 @@ public class DBOperations {
                         +"','"
                         +a.user+
                         "')");
-        } catch (ClassNotFoundException e) {
-            Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
-            return false;
         }catch (SQLException e){
             Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
-            JOptionPane.showMessageDialog(null,"Erro Na Criação da Relacao");
             return false;
         }
          
@@ -123,9 +109,7 @@ public class DBOperations {
     public static User findUserByNick(String nick){
         User u = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(url, username, password);
-            Statement st = conn.createStatement();
+            Statement st = Main.conn.createStatement();
             ResultSet set = st.executeQuery(" SELECT * FROM twitter.User WHERE idUser = '"+nick+"';");
             if(set.next()){
                     u = new User(set.getString("name"),
@@ -153,9 +137,6 @@ public class DBOperations {
                 u.tweet.add(a);
             }  
             
-       } catch (ClassNotFoundException e) {
-            Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
-            return null;
         }catch (SQLException e){
             Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
             return null;
@@ -171,18 +152,15 @@ public class DBOperations {
      */
     public static boolean DeleteNick(String nick){
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(url, username, password);
-            Statement st = conn.createStatement();
+            
+            
+            Statement st = Main.conn.createStatement();
             st.executeUpdate(" Delete FROM twitter.Followers WHERE User_idUser = '"+nick+"' or Folower ='"+nick+"';");
             st.executeUpdate(" Delete FROM twitter.Following WHERE User_idUser = '"+nick+"' or Followed ='"+nick+"';");
             st.executeUpdate(" Delete FROM twitter.Hashtags WHERE Feed_User_idUser = '"+nick+"';");
             st.executeUpdate(" Delete FROM twitter.Feed WHERE User_idUser = '"+nick+"';");
             st.executeUpdate(" Delete FROM twitter.User WHERE idUser = '"+nick+"';");
-        
-        } catch (ClassNotFoundException e) {
-            Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
-            return false;
+            
         }catch (SQLException e){
             Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
             return false;
@@ -193,9 +171,9 @@ public class DBOperations {
     public static Twitter findTwitter(String idFeed){
         Twitter t = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(url, username, password);
-            Statement st = conn.createStatement();
+            
+            
+            Statement st = Main.conn.createStatement();
             ResultSet set = st.executeQuery(" SELECT * FROM twitter.Feed WHERE idFeed = '"+idFeed+"';");
  
             if(set.next()){
@@ -210,9 +188,7 @@ public class DBOperations {
             while(set.next()){
                 t.hashtags.add(set.getString("tag"));
             }
-        } catch (ClassNotFoundException e) {
-            Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
-            return null;
+            
         }catch (SQLException e){
             Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
             return null;
@@ -232,9 +208,9 @@ public class DBOperations {
         User u = null;
         ArrayList<User> users = new ArrayList<>();
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(url, username, password);
-            Statement st = conn.createStatement();
+            
+            
+            Statement st = Main.conn.createStatement();
             ResultSet set = st.executeQuery(" SELECT * FROM twitter.User WHERE name = '"+name+"';");
             
             while(set.next()){
@@ -247,10 +223,7 @@ public class DBOperations {
                                 );
                     users.add(u);
             }
-
-       } catch (ClassNotFoundException e) {
-            Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
-            return null;
+        
         }catch (SQLException e){
             Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
             JOptionPane.showMessageDialog(null,"Erro Na Inserção do Supermercado");
@@ -270,9 +243,9 @@ public class DBOperations {
     public static User findUserByEmail(String email){
         User u = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(url, username, password);
-            Statement st = conn.createStatement();
+            
+            
+            Statement st = Main.conn.createStatement();
             ResultSet set = st.executeQuery(" SELECT * FROM twitter.User WHERE email = '"+email+"';");
             if(set.next()){
                     u = new User(set.getString("name"),
@@ -283,9 +256,7 @@ public class DBOperations {
                                 set.getString("cellphone")                               
                                 );
             }
-       } catch (ClassNotFoundException e) {
-            Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
-            return null;
+            
         }catch (SQLException e){
             Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
             return null;
@@ -302,9 +273,9 @@ public class DBOperations {
     public static User findUserByTelefone(String telefone){
         User u = null;
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(url, username, password);
-            Statement st = conn.createStatement();
+            
+            
+            Statement st = Main.conn.createStatement();
             ResultSet set = st.executeQuery(" SELECT * FROM twitter.User WHERE cellphone = '"+telefone+"';");
             if(set.next()){
                     u = new User(set.getString("name"),
@@ -315,9 +286,7 @@ public class DBOperations {
                                 set.getString("cellphone")                               
                                 );
             }
-       } catch (ClassNotFoundException e) {
-            Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
-            return null;
+            
         }catch (SQLException e){
             Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
             return null;
@@ -331,9 +300,9 @@ public class DBOperations {
      */
     static boolean clearTables() {
         try {
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(url, username, password);
-            Statement st = conn.createStatement();
+            
+            
+            Statement st = Main.conn.createStatement();
             //st.executeUpdate("SET SQL_SAFE_UPDATES = 0");
             st.executeUpdate("DELETE FROM twitter.Following");
             st.executeUpdate("DELETE FROM twitter.Hashtags");
@@ -341,10 +310,6 @@ public class DBOperations {
             st.executeUpdate("DELETE FROM twitter.Feed");
             st.executeUpdate("DELETE FROM twitter.User");
             
-            
-        } catch (ClassNotFoundException e) {
-            Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
-            return false;
         }catch (SQLException e){
             Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
             JOptionPane.showMessageDialog(null,"Erro Na Inserção do Supermercado");
@@ -367,9 +332,9 @@ public class DBOperations {
         String idFeed;
         try {
             
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(url, username, password);
-            Statement st = conn.createStatement();
+            
+            
+            Statement st = Main.conn.createStatement();
             System.out.println(u.tweet.size());
             System.out.println(u.user);
             idFeed = u.user+"-"+u.tweet.size();
@@ -394,9 +359,6 @@ public class DBOperations {
                     +t.hashtags.get(i)+
                     "')");
             }
-        } catch (ClassNotFoundException e) {
-            Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
-            return false;
         }catch (SQLException e){
             Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
             return false;
@@ -453,9 +415,9 @@ public class DBOperations {
         String idFeed;
         try {
             
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(url, username, password);
-            Statement st = conn.createStatement();
+            
+            
+            Statement st = Main.conn.createStatement();
             idFeed = u.user+"-"+ u.tweet.size();
             st.executeUpdate("INSERT INTO Feed (idFeed,tweet,favorite,data,User_idUser)"
             + "VALUES('"+idFeed
@@ -479,9 +441,7 @@ public class DBOperations {
                     "')");
             }
             u.tweet.add(idFeed);
-        } catch (ClassNotFoundException e) {
-            Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
-            return false;
+
         }catch (SQLException e){
             Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
             return false;
@@ -500,18 +460,16 @@ public class DBOperations {
         ArrayList<Twitter> tweets = new ArrayList<>();
         try {
             
-            Class.forName("com.mysql.jdbc.Driver");
-            conn = DriverManager.getConnection(url, username, password);
-            Statement st = conn.createStatement();
+            
+            
+            Statement st = Main.conn.createStatement();
             ResultSet set = st.executeQuery("SELECT Feed_idFeed FROM Hashtags WHERE tag = '"+hashtag+"';");
             String id;
             while(set.next()){
                 id = set.getString("Feed_idFeed");
                 tweets.add(findTwitter(id));
             }
-        } catch (ClassNotFoundException e) {
-            Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
-            return null;
+            
         }catch (SQLException e){
             Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
             return null;
