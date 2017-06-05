@@ -19,15 +19,18 @@ import java.util.logging.Logger;
  */
 public class Main {
     public static Connection conn = null; 
-    public static final String serverName = "127.0.0.1";;
+    public static final String serverName = "127.0.0.1";
     public static final String mydatabase = "twitter";  
-    public static final String url = "jdbc:mysql://" + serverName + "/" + mydatabase;;
-    public static final String username = "root";;
-    public static final String password = "";
+    //public static final String url = "jdbc:mysql://" + serverName + "/" + mydatabase;
+    public static final String url = "jdbc:mysql://localhost:3306/"+mydatabase+"?autoReconnect=true&useSSL=false";
+    public static final String username = "root";
+    public static final String password = "030465";
+    public static Statement st;
     public static void main(String[] args) {
         try{
         Class.forName("com.mysql.jdbc.Driver");
         conn = DriverManager.getConnection(url, username, password);
+        st = Main.conn.createStatement();
         int op;
         //buidCollectionUser();
         //buildCollectionTwitter();
@@ -191,7 +194,6 @@ public class Main {
                     tempoInicial = System.currentTimeMillis();
                     for(int i = 0;i < n_user; i++){
                         user_obj = DBOperations.findUserByNick("@user"+i);
-                        System.out.println(user_obj);
                         for(int j = 0; j < n_tweets; j++){
                             DBOperations.twittarMassivo(user_obj);
                         }     
@@ -244,8 +246,8 @@ public class Main {
                     DBOperations.generateFollower(a,b);
                     break;
             }
-            conn.close();
         }while (op != 0);
+        conn.close();
                 } catch (ClassNotFoundException e) {
             Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
         }catch (SQLException e){

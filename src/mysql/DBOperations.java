@@ -175,7 +175,7 @@ public class DBOperations {
             
             Statement st = Main.conn.createStatement();
             ResultSet set = st.executeQuery(" SELECT * FROM twitter.Feed WHERE idFeed = '"+idFeed+"';");
- 
+            
             if(set.next()){
                     t = new Twitter(set.getString("idFeed"),
                                 set.getString("tweet"),
@@ -375,7 +375,7 @@ public class DBOperations {
      */
     public static boolean twittarMassivo(User u){
          //lista de twitters aleatorios
-        System.out.println("Size =" + u.tweet.size());
+       
         String[] tweets = {"#first Primeiro Tweet",
             
                            "#BodyBuilder #Partiu Academia!!",
@@ -410,7 +410,6 @@ public class DBOperations {
         //pega um tt aleatorio
         String tweet = tweets[(int)Math.ceil(Math.random() * tweets.length)-1];
         Twitter t = new Twitter(tweet,u.user);
-        System.out.println(t);
         
         String idFeed;
         try {
@@ -441,7 +440,7 @@ public class DBOperations {
                     "')");
             }
             u.tweet.add(idFeed);
-
+          
         }catch (SQLException e){
             Logger.getLogger(DBOperations.class.getName()).log(Level.SEVERE, null, e);
             return false;
